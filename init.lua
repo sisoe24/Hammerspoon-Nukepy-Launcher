@@ -4,7 +4,7 @@
 ---
 --- Download: [https://github.com/Hammerspoon/Spoons/raw/master/Spoons/PopupTranslateSelection.spoon.zip](https://github.com/Hammerspoon/Spoons/raw/master/Spoons/PopupTranslateSelection.spoon.zip)
 local obj = {}
-obj.__index = obj
+obj._index = obj
 
 -- Metadata
 obj.name = "HNukeLauncher"
@@ -13,25 +13,33 @@ obj.author = "Virgil Sisoe <virgilsisoe@gmail.com>"
 obj.homepage = "https://github.com/Hammerspoon/Spoons"
 obj.license = "MIT - https://opensource.org/licenses/MIT"
 
---- HNukeLauncher.pathLenght
+
+--- HNukeLauncher.returnFocus
+--- Variable
+--- Return the focus to the app which is currenlty active when the script launcher is executed.
+obj.returnFocus = true
+
+--- HNukeLauncher.pathLength
 --- Variable
 --- How long the path should be in the subtext of the chooser 'users/x/path3/path2/path1/. Starts from the end'
-obj.pathLenght = 4
+obj.pathLength = 4
 
 --- HNukeLauncher.logger
 --- Variable
---- Logging funcionality. Defaults to info
+--- Logging functionality. Defaults to info
 obj.logger = 'info'
 local logger = hs.logger.new("NukeLauncher", obj.logger)
 
-SCRIPTS = {}
+obj._SCRIPTS = {}
 
 -- TODO: maybe add change to add specific window app by user
-function checkApp()
+function _checkApp()
   local app, secondWindow = hs.application.find("Nuke.+")
+  local currentApp = hs.application.frontmostApplication()
 
-  if secondWindow then 
-    hs.alert("Multiple windows detected. Scripts does not know which one you want. Aborting")
+  if secondWindow then
+    hs.alert(
+        "Multiple windows detected. Scripts does not know which one you want. Aborting")
     return nil
   end
 
@@ -40,56 +48,73 @@ function checkApp()
     return nil
   end
 
-  return app
+  return app, app:mainWindow(), currentApp
 end
 
+-- Internal function
+-- Launch the select .py file inside nuke
 local function launchScript(file)
-  local app = checkApp()
+  local app, window, currentApp = _checkApp()
   if not app then return end
 
   app:activate()
-  hs.eventtap.keyStroke({"option"}, "x")
-  hs.eventtap.keyStrokes(file)
-  hs.eventtap.keyStroke({}, "return")
+  local execute = string.format([[
+    tell application "System Events"
+      tell process "%s"
+        click menu item "Scripting" of menu 1 of menu bar item "Workspace" of menu bar 1
+        click button 4 of group 1 of splitter group 2 of splitter group 1 of window "%s"
+        delay 0.1
+        set value of text field 1 of window "Choose a script file" to "%s"
+        delay 0.05
+        click button "Open" of window "Choose a script file"
+      end tell
+    end tell
+  ]], app:name(), window:title(), file)
+
+  local a, b, c = hs.osascript.applescript(execute)
+  logger:d('applescript report:', a, b, c)
+
+  if obj.returnFocus then currentApp:activate() end
+
 end
 
--- internal function that updates the script list
--- putting the last selected item at the top of the list
+-- Internal function 
+-- Updates the script list by putting the last selected item at the top of the list
 local function updateChooserList(choice)
   local popItem = ""
 
-  for index, _table in pairs(SCRIPTS) do
+  for index, _table in pairs(obj._SCRIPTS) do
     if hs.fnutils.indexOf(_table, choice['text']) then
-      popItem = table.remove(SCRIPTS, index)
+      popItem = table.remove(obj._SCRIPTS, index)
     end
   end
 
-  table.insert(SCRIPTS, 1, popItem)
-  MenuChooser:choices(SCRIPTS)
+  table.insert(obj._SCRIPTS, 1, popItem)
+  obj.MenuChooser:choices(obj._SCRIPTS)
 end
 
-MenuChooser = hs.chooser.new(function(choice)
+obj.MenuChooser = hs.chooser.new(function(choice)
   if choice == nil then return end
   logger.i(choice["path"])
   launchScript(choice["path"])
   updateChooserList(choice)
 end)
 
-MenuChooser:placeholderText("Nuke launcher script")
-
-MenuChooser:rightClickCallback(function(choice)
-  local path = MenuChooser:selectedRowContents(choice)['path']
+obj.MenuChooser:placeholderText("Nuke launcher script")
+obj.MenuChooser:rightClickCallback(function(choice)
+  local path = obj.MenuChooser:selectedRowContents(choice)['path']
   hs.execute(string.format("open \"%s\"", path))
 end)
 
-MenuChooser:width(15)
+obj.MenuChooser:width(15)
 
--- Internal function that shortens the path for easier reading in the chooser
+-- Internal function
+-- Shorten the path for easier reading in the chooser
 local function shortenPath(path)
   local splittedPath = hs.fnutils.split(path, "/")
   local newPath = ".../"
 
-  local pathEnd = #splittedPath - obj.pathLenght
+  local pathEnd = #splittedPath - obj.pathLength
 
   for index, path in pairs(splittedPath) do
     if string.match(path, '.+') then
@@ -101,13 +126,13 @@ end
 
 -- Internal function that sets the rows of the chooser based
 -- on the numbers of files
-local function setChooserRows()
-  local numSCRIPTS = #SCRIPTS
+local function _setChooserRows()
+  local numScripts = #obj._SCRIPTS
   local nRows = 10
   logger.v(numFile)
-  if numSCRIPTS <= 9 then nRows = numSCRIPTS end
+  if numScripts <= 9 then nRows = numScripts end
 
-  MenuChooser:rows(nRows)
+  obj.MenuChooser:rows(nRows)
 end
 
 -- Internal Function.
@@ -117,7 +142,7 @@ end
 -- Parameters:
 -- path - path to be parsed
 -- parseRecursively - optional boolean to parse recursively
-function parseDirectories(path, parseRecursively)
+local function parseDirectories(path, parseRecursively)
   local dirs = {}
   local path = string.gsub(path, '/$', '')
   local shortedPath = shortenPath(path)
@@ -129,7 +154,7 @@ function parseDirectories(path, parseRecursively)
 
       if string.match(file, ".py$") then
         logger.v("valid py file:", file)
-        table.insert(SCRIPTS, {
+        table.insert(obj._SCRIPTS, {
           ['text'] = file,
           ['subText'] = shortedPath,
           ["path"] = filePath
@@ -146,8 +171,8 @@ function parseDirectories(path, parseRecursively)
 
   for k, v in pairs(dirs) do obj:addDirectory(v, parseRecursively) end
 
-  MenuChooser:choices(SCRIPTS)
-  setChooserRows()
+  obj.MenuChooser:choices(obj._SCRIPTS)
+  _setChooserRows()
 end
 
 --- HNukeLauncher:addDirectory(path, HNukeLauncher:parseRecursively)
@@ -169,7 +194,7 @@ end
 --- mapping - a table containing the shortcuts keys: {{"ctrl", "shift"}, "f"}
 function obj:bindHotkeys(mapping)
   modifiers, keys = table.unpack(mapping)
-  hs.hotkey.bind(modifiers, keys, function() MenuChooser:show() end)
+  hs.hotkey.bind(modifiers, keys, function() obj.MenuChooser:show() end)
 end
 
 return obj

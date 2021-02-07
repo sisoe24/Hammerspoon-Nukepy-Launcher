@@ -1,17 +1,7 @@
 [
   {
     "Command": [],
-    "Constant": [
-      {
-        "def": "HNukeLauncher.parseRecursively",
-        "desc": "Parse recursively when iterating over directory",
-        "doc": "Parse recursively when iterating over directory",
-        "name": "parseRecursively",
-        "signature": "HNukeLauncher.parseRecursively",
-        "stripped_doc": "",
-        "type": "Constant"
-      }
-    ],
+    "Constant": [],
     "Constructor": [],
     "Deprecated": [],
     "Field": [],
@@ -20,11 +10,11 @@
       {
         "def": "HNukeLauncher:addDirectory(path, HNukeLauncher:parseRecursively)",
         "desc": "Generate chooser entries from python files in the path",
-        "doc": "Generate chooser entries from python files in the path\n\nParameters:\npath - the path to be parsed for .py files\nHNukeLauncher:parseRecursively - An optional boolean for recursive parsing",
+        "doc": "Generate chooser entries from python files in the path\n\nParameters:\npath - the path to be parsed for .py files\narseRecursively - An optional boolean for recursive parsing",
         "name": "addDirectory",
         "parameters": [
           "path - the path to be parsed for .py files",
-          "HNukeLauncher:parseRecursively - An optional boolean for recursive parsing"
+          "arseRecursively - An optional boolean for recursive parsing"
         ],
         "signature": "HNukeLauncher:addDirectory(path, HNukeLauncher:parseRecursively)",
         "stripped_doc": "",
@@ -46,37 +36,28 @@
     "Variable": [
       {
         "def": "HNukeLauncher.logger",
-        "desc": "Logging funcionality. Defaults to info",
-        "doc": "Logging funcionality. Defaults to info",
+        "desc": "Logging functionality. Defaults to info",
+        "doc": "Logging functionality. Defaults to info",
         "name": "logger",
         "signature": "HNukeLauncher.logger",
         "stripped_doc": "",
         "type": "Variable"
       },
       {
-        "def": "HNukeLauncher.pathLenght",
+        "def": "HNukeLauncher.pathLength",
         "desc": "How long the path should be in the subtext of the chooser 'users/x/path3/path2/path1/. Starts from the end'",
         "doc": "How long the path should be in the subtext of the chooser 'users/x/path3/path2/path1/. Starts from the end'",
-        "name": "pathLenght",
-        "signature": "HNukeLauncher.pathLenght",
+        "name": "pathLength",
+        "signature": "HNukeLauncher.pathLength",
         "stripped_doc": "",
         "type": "Variable"
       },
       {
-        "def": "HNukeLauncher.placeholderText",
-        "desc": "Placeholder text for the chooser menu. Defaults to \"Nuke scripts launcher\"",
-        "doc": "Placeholder text for the chooser menu. Defaults to \"Nuke scripts launcher\"",
-        "name": "placeholderText",
-        "signature": "HNukeLauncher.placeholderText",
-        "stripped_doc": "",
-        "type": "Variable"
-      },
-      {
-        "def": "HNukeLauncher.width",
-        "desc": "Width of the chooser menu. Defaults to 20",
-        "doc": "Width of the chooser menu. Defaults to 20",
-        "name": "width",
-        "signature": "HNukeLauncher.width",
+        "def": "HNukeLauncher.returnFocus",
+        "desc": "Return the focus to the app which is currenlty active when the script launcher is executed.",
+        "doc": "Return the focus to the app which is currenlty active when the script launcher is executed.",
+        "name": "returnFocus",
+        "signature": "HNukeLauncher.returnFocus",
         "stripped_doc": "",
         "type": "Variable"
       }
@@ -87,11 +68,11 @@
       {
         "def": "HNukeLauncher:addDirectory(path, HNukeLauncher:parseRecursively)",
         "desc": "Generate chooser entries from python files in the path",
-        "doc": "Generate chooser entries from python files in the path\n\nParameters:\npath - the path to be parsed for .py files\nHNukeLauncher:parseRecursively - An optional boolean for recursive parsing",
+        "doc": "Generate chooser entries from python files in the path\n\nParameters:\npath - the path to be parsed for .py files\narseRecursively - An optional boolean for recursive parsing",
         "name": "addDirectory",
         "parameters": [
           "path - the path to be parsed for .py files",
-          "HNukeLauncher:parseRecursively - An optional boolean for recursive parsing"
+          "arseRecursively - An optional boolean for recursive parsing"
         ],
         "signature": "HNukeLauncher:addDirectory(path, HNukeLauncher:parseRecursively)",
         "stripped_doc": "",
@@ -111,52 +92,34 @@
       },
       {
         "def": "HNukeLauncher.logger",
-        "desc": "Logging funcionality. Defaults to info",
-        "doc": "Logging funcionality. Defaults to info",
+        "desc": "Logging functionality. Defaults to info",
+        "doc": "Logging functionality. Defaults to info",
         "name": "logger",
         "signature": "HNukeLauncher.logger",
         "stripped_doc": "",
         "type": "Variable"
       },
       {
-        "def": "HNukeLauncher.parseRecursively",
-        "desc": "Parse recursively when iterating over directory",
-        "doc": "Parse recursively when iterating over directory",
-        "name": "parseRecursively",
-        "signature": "HNukeLauncher.parseRecursively",
-        "stripped_doc": "",
-        "type": "Constant"
-      },
-      {
-        "def": "HNukeLauncher.pathLenght",
+        "def": "HNukeLauncher.pathLength",
         "desc": "How long the path should be in the subtext of the chooser 'users/x/path3/path2/path1/. Starts from the end'",
         "doc": "How long the path should be in the subtext of the chooser 'users/x/path3/path2/path1/. Starts from the end'",
-        "name": "pathLenght",
-        "signature": "HNukeLauncher.pathLenght",
+        "name": "pathLength",
+        "signature": "HNukeLauncher.pathLength",
         "stripped_doc": "",
         "type": "Variable"
       },
       {
-        "def": "HNukeLauncher.placeholderText",
-        "desc": "Placeholder text for the chooser menu. Defaults to \"Nuke scripts launcher\"",
-        "doc": "Placeholder text for the chooser menu. Defaults to \"Nuke scripts launcher\"",
-        "name": "placeholderText",
-        "signature": "HNukeLauncher.placeholderText",
-        "stripped_doc": "",
-        "type": "Variable"
-      },
-      {
-        "def": "HNukeLauncher.width",
-        "desc": "Width of the chooser menu. Defaults to 20",
-        "doc": "Width of the chooser menu. Defaults to 20",
-        "name": "width",
-        "signature": "HNukeLauncher.width",
+        "def": "HNukeLauncher.returnFocus",
+        "desc": "Return the focus to the app which is currenlty active when the script launcher is executed.",
+        "doc": "Return the focus to the app which is currenlty active when the script launcher is executed.",
+        "name": "returnFocus",
+        "signature": "HNukeLauncher.returnFocus",
         "stripped_doc": "",
         "type": "Variable"
       }
     ],
     "name": "HNukeLauncher",
-    "stripped_doc": "\nDownload: [https://github.com/Hammerspoon/Spoons/raw/master/Spoons/PopupTranslateSelection.spoon.zip](https://github.com/Hammerspoon/Spoons/raw/master/Spoons/PopupTranslateSelection.spoon.zip)",
+    "stripped_doc": "\nDownload: []()",
     "submodules": [],
     "type": "Module"
   }
