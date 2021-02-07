@@ -3,7 +3,7 @@
 ---
 
 Create a chooser menu with python files to be launched inside Nuke app.
-![chooser](/Spoons/HNukeLauncher.spoon/images/chooser.png)
+![chooser](/images/chooser.png)
 
 HNukeLauncher uses [applescript idea](https://github.com/sisoe24/Nukepy-Applescript-Launcher) to execute actions.
 
