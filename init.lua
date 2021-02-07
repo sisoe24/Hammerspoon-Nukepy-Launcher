@@ -2,7 +2,7 @@
 ---
 --- Create a chooser menu with python files to be launched in Nuke app.
 ---
---- Download: [https://github.com/Hammerspoon/Spoons/raw/master/Spoons/PopupTranslateSelection.spoon.zip](https://github.com/Hammerspoon/Spoons/raw/master/Spoons/PopupTranslateSelection.spoon.zip)
+--- Download: [https://github.com/sisoe24/Hammerspoon-Nukepy-Launcher/releases/download/0.0.1/HNukeLauncher.spoon.zip](https://github.com/sisoe24/Hammerspoon-Nukepy-Launcher/releases/download/0.0.1/HNukeLauncher.spoon.zip)
 local obj = {}
 obj._index = obj
 
@@ -16,17 +16,17 @@ obj.license = "MIT - https://opensource.org/licenses/MIT"
 
 --- HNukeLauncher.returnFocus
 --- Variable
---- Return the focus to the app which is currenlty active when the script launcher is executed.
+--- Optional. Return the focus to the app which is currenlty active when the script launcher is executed.
 obj.returnFocus = true
 
 --- HNukeLauncher.pathLength
 --- Variable
---- How long the path should be in the subtext of the chooser 'users/x/path3/path2/path1/. Starts from the end'
+--- Optional. How long the path should be in the subtext of the chooser 'users/x/path3/path2/path1/. Starts from the end. Defaults to 4'
 obj.pathLength = 4
 
 --- HNukeLauncher.logger
 --- Variable
---- Logging functionality. Defaults to info
+--- Optional. Logging functionality. Defaults to info
 obj.logger = 'info'
 local logger = hs.logger.new("NukeLauncher", obj.logger)
 
@@ -175,13 +175,13 @@ local function parseDirectories(path, parseRecursively)
   _setChooserRows()
 end
 
---- HNukeLauncher:addDirectory(path, HNukeLauncher:parseRecursively)
+--- HNukeLauncher:addDirectory(path, parseRecursively)
 --- Method
 --- Generate chooser entries from python files in the path
 ---
 --- Parameters:
 --- path - the path to be parsed for .py files
---- arseRecursively - An optional boolean for recursive parsing
+--- parseRecursively - An optional boolean for recursive parsing
 function obj:addDirectory(path, parseRecursively)
   parseDirectories(path, parseRecursively)
 end
