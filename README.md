@@ -25,7 +25,7 @@ nuke = hs.loadSpoon("HNukeLauncher")
 nuke:bindHotkeys({{"ctrl", "shift"}, "z"})     -- add hotkey
 nuke:addDirectory("/path/to/nuke_scripts")     
 nuke:addDirectory("/other/path/scripts", true) -- parse recursevily inside path
-nuke:returnFocus = false                       -- do not return focus on starting app
+nuke:returnFocus = false                       -- optional: if you do not want to return focus on starting app
 ```
 
 ## API Overview
