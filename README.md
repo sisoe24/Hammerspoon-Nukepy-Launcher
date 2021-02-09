@@ -10,13 +10,13 @@ HNukeLauncher uses [applescript idea](https://github.com/sisoe24/Nukepy-Applescr
 
 Download: [https://github.com/sisoe24/Hammerspoon-Nukepy-Launcher/releases/download/0.0.1/HNukeLauncher.spoon.zip](https://github.com/sisoe24/Hammerspoon-Nukepy-Launcher/releases/download/0.0.1/HNukeLauncher.spoon.zip)
 
-## Basic usage
-
 ---
 **NOTE**
 If you unzip the file with tools other than the default, be sure that the file name still has the .spoon at the end (_HNukeLauncher.spoon_), otherwise it will be threated like any other folder.
 
 ---
+
+## Basic usage
 
 Unzip the file and double clicking on the .spoon file to install, then inside your _init.lua_:
 
