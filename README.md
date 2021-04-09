@@ -8,8 +8,6 @@ Create a chooser menu with python files to be launched inside Nuke app.
 
 HNukeLauncher uses [applescript idea](https://github.com/sisoe24/Nukepy-Applescript-Launcher) to execute actions.
 
-## Basic usage
-
 Download: [https://github.com/sisoe24/Hammerspoon-Nukepy-Launcher/releases/download/0.0.1/HNukeLauncher.spoon.zip](https://github.com/sisoe24/Hammerspoon-Nukepy-Launcher/releases/download/0.0.1/HNukeLauncher.spoon.zip)
 
 ---
@@ -18,6 +16,8 @@ If you unzip the file with tools other than the default, be sure that the file n
 
 ---
 
+## Basic usage
+
 Unzip the file and double clicking on the .spoon file to install, then inside your _init.lua_:
 
 ```lua
@@ -25,7 +25,7 @@ nuke = hs.loadSpoon("HNukeLauncher")
 nuke:bindHotkeys({{"ctrl", "shift"}, "z"})     -- add hotkey
 nuke:addDirectory("/path/to/nuke_scripts")     
 nuke:addDirectory("/other/path/scripts", true) -- parse recursevily inside path
-nuke:returnFocus = false                       -- do not return focus on starting app
+nuke:returnFocus = false                       -- optional: if you do not want to return focus on starting app
 ```
 
 ## API Overview
