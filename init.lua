@@ -10,9 +10,8 @@ obj._index = obj
 obj.name = "HNukeLauncher"
 obj.version = "0.1"
 obj.author = "Virgil Sisoe <virgilsisoe@gmail.com>"
-obj.homepage = "https://github.com/Hammerspoon/Spoons"
+obj.homepage = "https://github.com/sisoe24/Hammerspoon-Nukepy-Launcher"
 obj.license = "MIT - https://opensource.org/licenses/MIT"
-
 
 --- HNukeLauncher.returnFocus
 --- Variable
@@ -35,25 +34,24 @@ obj._SCRIPTS = {}
 -- TODO: maybe add change to add specific window app by user
 function _checkApp()
   local app, secondWindow = hs.application.find("Nuke.+")
-  local currentApp = hs.application.frontmostApplication()
 
   if secondWindow then
-    hs.alert(
-        "Multiple windows detected. Scripts does not know which one you want. Aborting")
+    hs.alert("Multiple windows. Scripts does not know which one you want.")
     return nil
   end
 
-  if app == nil or app:mainWindow() == nil then
-    hs.alert("Application window not detected. Please try again")
+  if not app or not app:mainWindow() then
+    hs.alert("Application window not detected")
     return nil
   end
 
+  local currentApp = hs.application.frontmostApplication()
   return app, app:mainWindow(), currentApp
 end
 
 -- Internal function
 -- Launch the select .py file inside nuke
-local function launchScript(file)
+function obj:launchScript(file)
   local app, window, currentApp = _checkApp()
   if not app then return end
 
@@ -74,18 +72,18 @@ local function launchScript(file)
   local a, b, c = hs.osascript.applescript(execute)
   logger:d('applescript report:', a, b, c)
 
-  if obj.returnFocus then currentApp:activate() end
+  if self.returnFocus then currentApp:activate() end
 
 end
 
--- Internal function 
+-- Internal function
 -- Updates the script list by putting the last selected item at the top of the list
-local function updateChooserList(choice)
+function obj:updateChooserList(choice)
   local popItem = ""
 
-  for index, _table in pairs(obj._SCRIPTS) do
+  for index, _table in pairs(self._SCRIPTS) do
     if hs.fnutils.indexOf(_table, choice['text']) then
-      popItem = table.remove(obj._SCRIPTS, index)
+      popItem = table.remove(self._SCRIPTS, index)
     end
   end
 
@@ -93,11 +91,12 @@ local function updateChooserList(choice)
   obj.MenuChooser:choices(obj._SCRIPTS)
 end
 
+-- TODO: update with self
 obj.MenuChooser = hs.chooser.new(function(choice)
   if choice == nil then return end
   logger.i(choice["path"])
-  launchScript(choice["path"])
-  updateChooserList(choice)
+  obj:launchScript(choice["path"])
+  obj:updateChooserList(choice)
 end)
 
 obj.MenuChooser:placeholderText("Nuke launcher script")
@@ -110,11 +109,11 @@ obj.MenuChooser:width(15)
 
 -- Internal function
 -- Shorten the path for easier reading in the chooser
-local function shortenPath(path)
-  local splittedPath = hs.fnutils.split(path, "/")
+function obj:shortenPath(fullPath)
+  local splittedPath = hs.fnutils.split(fullPath, "/")
   local newPath = ".../"
 
-  local pathEnd = #splittedPath - obj.pathLength
+  local pathEnd = #splittedPath - self.pathLength
 
   for index, path in pairs(splittedPath) do
     if string.match(path, '.+') then
@@ -126,13 +125,14 @@ end
 
 -- Internal function that sets the rows of the chooser based
 -- on the numbers of files
-local function _setChooserRows()
-  local numScripts = #obj._SCRIPTS
+function obj:setChooserRows()
+  local numScripts = #self._SCRIPTS
+  logger.v(numScripts)
+
   local nRows = 10
-  logger.v(numFile)
   if numScripts <= 9 then nRows = numScripts end
 
-  obj.MenuChooser:rows(nRows)
+  self.MenuChooser:rows(nRows)
 end
 
 -- Internal Function.
@@ -142,10 +142,10 @@ end
 -- Parameters:
 -- path - path to be parsed
 -- parseRecursively - optional boolean to parse recursively
-local function parseDirectories(path, parseRecursively)
+function obj:parseDirectories(path, parseRecursively)
   local dirs = {}
-  local path = string.gsub(path, '/$', '')
-  local shortedPath = shortenPath(path)
+  path = string.gsub(path, '/$', '')
+  local shortedPath = self:shortenPath(path)
 
   for file in hs.fs.dir(path) do
     if file ~= "." and file ~= ".." then
@@ -169,10 +169,10 @@ local function parseDirectories(path, parseRecursively)
     end
   end
 
-  for k, v in pairs(dirs) do obj:addDirectory(v, parseRecursively) end
+  for _, dir in pairs(dirs) do self:addDirectory(dir, parseRecursively) end
 
-  obj.MenuChooser:choices(obj._SCRIPTS)
-  _setChooserRows()
+  self.MenuChooser:choices(self._SCRIPTS)
+  self:setChooserRows()
 end
 
 --- HNukeLauncher:addDirectory(path, parseRecursively)
@@ -183,8 +183,10 @@ end
 --- path - the path to be parsed for .py files
 --- parseRecursively - An optional boolean for recursive parsing
 function obj:addDirectory(path, parseRecursively)
-  parseDirectories(path, parseRecursively)
+  self:parseDirectories(path, parseRecursively)
 end
+
+function obj:showChooser() self.MenuChooser:show() end
 
 --- HNukeLauncher:bindHotkeys(mapping)
 --- Method
@@ -193,8 +195,8 @@ end
 --- Parameters:
 --- mapping - a table containing the shortcuts keys: {{"ctrl", "shift"}, "f"}
 function obj:bindHotkeys(mapping)
-  modifiers, keys = table.unpack(mapping)
-  hs.hotkey.bind(modifiers, keys, function() obj.MenuChooser:show() end)
+  local actions = {chooser = hs.fnutils.partial(self.showChooser, self)}
+  hs.spoons.bindHotkeysToSpec(actions, mapping)
 end
 
 return obj
